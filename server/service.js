@@ -1,5 +1,6 @@
 'use strict';
 
+const config = require('../config/index');
 const express = require('express');
 const service = express();
 
@@ -8,7 +9,7 @@ const moment = require('moment');
 
 service.get('/service/:location', (req, res, next) => {
 	request.get('https://maps.googleapis.com/maps/api/geocode/json')
-		.query({ address: req.params.location, key: 'AIzaSyBZrOk7mTVvUeNGg63hzJ62kyXbzfhGCRU' })
+		.query({ address: req.params.location, key: config.googleGeoApiKey })
 		.end((err, resp) => {
 			if (err) {
 				console.log(err);
@@ -17,7 +18,7 @@ service.get('/service/:location', (req, res, next) => {
 			const location = resp.body.results[0].geometry.location;
 			const timestamp = +moment().format('X');
 			request.get('https://maps.googleapis.com/maps/api/timezone/json')
-				.query({ location: location.lat + ',' + location.lng, timestamp: timestamp, key: 'AIzaSyByd8tBvOc32IYHLNssOewwesqohRWhqPs' })
+				.query({ location: location.lat + ',' + location.lng, timestamp: timestamp, key: config.googleTimeApiKey })
 				.end((err, resp) => {
 					if (err) {
 						console.log(err);
