@@ -12,6 +12,8 @@ server.on('listening', () => {
 	log.info(`IRIS-Time is listening on ${server.address().port} in ${service.get('env')}`);
 	const announce = function() {
 		request.put(`http://127.0.0.1:3000/service/time/${server.address().port}`)
+			.set('X-IRIS-SERVICE-TOKEN', config.serviceAccessToken)
+			.set('X-IRIS-API-TOKEN', config.irisApiToken)
 			.end((err, resp) => {
 				if (err) {
 					log.debug(err);

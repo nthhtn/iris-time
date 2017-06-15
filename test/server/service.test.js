@@ -19,6 +19,7 @@ describe('The Express service', () => {
 		it('should return HTTP 200 with a valid result', (done) => {
 			request(service)
 				.get('/service/vienna')
+				.set('X-IRIS-SERVICE-TOKEN', config.serviceAccessToken)
 				.expect(200)
 				.end((err, resp) => {
 					if (err) {
@@ -27,6 +28,13 @@ describe('The Express service', () => {
 					resp.body.result.should.exist;
 					return done();
 				});
+		});
+		it('should return HTTP 403 if not valid token was passed', (done) => {
+			request(service)
+				.get('/service/vienna')
+				.set('X-IRIS-SERVICE-TOKEN', 'Wrong token')
+				.expect(403)
+				.end(done);
 		});
 	})
 
